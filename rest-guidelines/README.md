@@ -1,1 +1,0 @@
-# ist-group.github.io
