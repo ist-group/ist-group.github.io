@@ -1428,7 +1428,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#215"><span class="must-keyword"><strong>MUST</strong></span> provide API identifiers</a></li>
 <li><a href="#219"><span class="must-keyword"><strong>MUST</strong></span> provide API audience</a></li>
 <li><a href="#223"><span class="must-keyword"><strong>MUST</strong></span>/<span class="should-keyword"><strong>SHOULD</strong></span> use functional naming schema</a></li>
-<li><a href="#224"><span class="must-keyword"><strong>MUST</strong></span> follow naming convention for basepaths</a></li>
+<li><a href="#224"><span class="must-keyword"><strong>MUST</strong></span> follow naming convention for hostnames</a></li>
 </ul>
 </li>
 <li><a href="#security">5. REST Basics - Security</a>
@@ -1485,6 +1485,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#124"><span class="should-keyword"><strong>SHOULD</strong></span> not use <code>null</code> for empty arrays</a></li>
 <li><a href="#174"><span class="must-keyword"><strong>MUST</strong></span> use common field names and semantics</a></li>
 <li><a href="#249"><span class="must-keyword"><strong>MUST</strong></span> use the common address fields</a></li>
+<li><a href="#173"><span class="must-keyword"><strong>MUST</strong></span> use the common money object</a></li>
 </ul>
 </li>
 <li><a href="#http-requests">9. REST Basics - HTTP requests</a>
@@ -1521,6 +1522,9 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#181"><span class="may-keyword"><strong>MAY</strong></span> consider to support <code>Prefer</code> header to handle processing preferences</a></li>
 <li><a href="#182"><span class="may-keyword"><strong>MAY</strong></span> consider to support <code>ETag</code> together with <code>If-Match</code>/<code>If-None-Match</code> header</a></li>
 <li><a href="#230"><span class="may-keyword"><strong>MAY</strong></span> consider to support <code>Idempotency-Key</code> header</a></li>
+<li><a href="#183"><span class="should-keyword"><strong>SHOULD</strong></span> use only the specified proprietary Zalando headers</a></li>
+<li><a href="#184"><span class="must-keyword"><strong>MUST</strong></span> propagate proprietary headers</a></li>
+<li><a href="#233"><span class="must-keyword"><strong>MUST</strong></span> support <code>X-Flow-ID</code></a></li>
 </ul>
 </li>
 <li><a href="#hypermedia">12. REST Design - Hypermedia</a>
@@ -1539,7 +1543,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#156"><span class="should-keyword"><strong>SHOULD</strong></span> use <code>gzip</code> compression</a></li>
 <li><a href="#157"><span class="should-keyword"><strong>SHOULD</strong></span> support partial responses via filtering</a></li>
 <li><a href="#158"><span class="should-keyword"><strong>SHOULD</strong></span> allow optional embedding of sub-resources</a></li>
-<li><a href="#227"><span class="must-keyword"><strong>MUST</strong></span> document cacheable <code>GET</code> and <code>HEAD</code> endpoints</a></li>
+<li><a href="#227"><span class="must-keyword"><strong>MUST</strong></span> document cacheable <code>GET</code>, <code>HEAD</code>, and <code>POST</code> endpoints</a></li>
 </ul>
 </li>
 <li><a href="#pagination">14. REST Design - Pagination</a>
@@ -2234,12 +2238,13 @@ being used by internal helper and worker services or that support service operat
 <dt class="hdlist1"><strong>business-unit-internal</strong></dt>
 <dd>
 <p>The API consumers with this audience are restricted to applications of a
-specific product portfolio owned by the same business unit (e.g IST Products teams).</p>
+specific product portfolio owned by the same business unit.</p>
 </dd>
 <dt class="hdlist1"><strong>company-internal</strong></dt>
 <dd>
 <p>The API consumers with this audience are restricted to applications owned
-by the business units of the same the company (e.g. different teams within the IST group)</p>
+by the business units of the same the company (e.g. Zalando company with
+Zalando SE, Zalando Payments SE &amp; Co. KG. etc.)</p>
 </dd>
 <dt class="hdlist1"><strong>external-partner</strong></dt>
 <dd>
@@ -2291,7 +2296,7 @@ the target audience.</p>
 <pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">openapi</span>: <span class="string"><span class="content">3.0.1</span></span>
 <span class="key">info</span>:
   <span class="key">x-audience</span>: <span class="string"><span class="content">company-internal</span></span>
-  <span class="key">title</span>: <span class="string"><span class="content">Log Service API</span></span>
+  <span class="key">title</span>: <span class="string"><span class="content">Parcel Helper Service API</span></span>
   <span class="key">description</span>: <span class="string"><span class="content">API for &lt;...&gt;</span></span>
   <span class="key">version</span>: <span class="string"><span class="content">1.2.4</span></span>
   <span class="error">&lt;...&gt;</span></code></pre>
@@ -2315,7 +2320,7 @@ to and a unique a short identifier for the functional component itself:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bnf">&lt;functional-name&gt;      ::= &lt;functional-domain&gt;/&lt;functional-component&gt;
+<pre class="CodeRay highlight"><code data-lang="bnf">&lt;functional-name&gt;      ::= &lt;functional-domain&gt;-&lt;functional-component&gt;
 &lt;functional-domain&gt;    ::= [a-z][a-z0-9-]* -- managed functional group of components
 &lt;functional-component&gt; ::= [a-z][a-z0-9-]* -- name of API owning functional component</code></pre>
 </div>
@@ -2351,22 +2356,22 @@ naming schema for <a href="#224">hostnames</a> and <a href="#213">event names</a
 </table>
 <div class="paragraph">
 <p>Please see the following rules for detailed functional naming patterns:
-* <a href="#224"><span class="must-keyword"><strong>MUST</strong></span> follow naming convention for basepaths</a>
+* <a href="#224"><span class="must-keyword"><strong>MUST</strong></span> follow naming convention for hostnames</a>
 * <a href="#213"><span class="must-keyword"><strong>MUST</strong></span> follow naming convention for event type names</a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="224"><a class="link" href="#224"><span class="must-keyword"><strong>MUST</strong></span> follow naming convention for basepaths</a></h3>
+<h3 id="224"><a class="link" href="#224"><span class="must-keyword"><strong>MUST</strong></span> follow naming convention for hostnames</a></h3>
 <div class="paragraph">
-<p>Basepaths in APIs must, respectively should conform to the functional naming
+<p>Hostnames in APIs must, respectively should conform to the functional naming
 depending on the <a href="#219">audience</a> as follows (see <a href="#223"><span class="must-keyword"><strong>MUST</strong></span>/<span class="should-keyword"><strong>SHOULD</strong></span> use functional naming schema</a> for details and
 <code>&lt;functional-name&gt;</code> definition):</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bnf">&lt;basepath&gt;             ::= &lt;functional-hostname&gt; | &lt;application-hostname&gt;
+<pre class="CodeRay highlight"><code data-lang="bnf">&lt;hostname&gt;             ::= &lt;functional-hostname&gt; | &lt;application-hostname&gt;
 
-&lt;functional-hostname&gt;  ::= api.ist.com/&lt;functional-name&gt;</code></pre>
+&lt;functional-hostname&gt;  ::= &lt;functional-name&gt;.zalandoapis.com</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2375,10 +2380,16 @@ and <strong>only</strong> allowed for hostnames of <a href="#219">component-inte
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bnf">&lt;application-hostname&gt; ::= &lt;application-id&gt;.&lt;organization-unit&gt;.ist.com
+<pre class="CodeRay highlight"><code data-lang="bnf">&lt;application-hostname&gt; ::= &lt;application-id&gt;.&lt;organization-unit&gt;.zalan.do
 &lt;application-id&gt;       ::= [a-z][a-z0-9-]*  -- application identifier
 &lt;organization-id&gt;      ::= [a-z][a-z0-9-]*  -- organization unit identifier, e.g. team identifier</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p><strong>Exception:</strong> There are legacy hostnames used for APIs with <code>external-partner</code> audience
+which may not follow this rule due to backward compatibility constraints.
+The API Linter maintains an allow-list for these exceptions (including e.g.
+<code>api.merchants.zalando.com</code> and <code>api-sandbox.merchants.zalando.com</code>).</p>
 </div>
 </div>
 </div>
@@ -2515,7 +2526,7 @@ as follows:</p>
 <p>In some cases a whole API or selected API endpoints may not require specific
 permissions, e.g. if information is public or protected by object level
 authorization. To make this explicit you should assign the <code>uid</code> pseudo
-permission, that is always available as OAuth2 default scope in IST.</p>
+permission, that is always available as OAuth2 default scope in Zalando.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2676,25 +2687,25 @@ You <strong>must</strong> use these formats, whenever applicable:</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>email</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://tools.ietf.org/html/rfc5322">RFC 5322</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"<a href="mailto:example@ist.com">example@ist.com</a>"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"<a href="mailto:example@zalando.de">example@zalando.de</a>"</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>idn-email</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://tools.ietf.org/html/rfc6531">RFC 6531</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"hello@växjö.example"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"hello@bücher.example"</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>hostname</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://tools.ietf.org/html/rfc1034">RFC 1034</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"www.ist.com"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"www.zalando.de"</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>idn-hostname</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://tools.ietf.org/html/rfc5890">RFC 5890</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"växjö.example"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"bücher.example"</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
@@ -2712,25 +2723,25 @@ You <strong>must</strong> use these formats, whenever applicable:</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>uri</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://tools.ietf.org/html/rfc3986">RFC 3986</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"https://www.ist.com/"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"https://www.zalando.de/"</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>uri-reference</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://tools.ietf.org/html/rfc3986">RFC 3986</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"/grades/"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"/clothing/"</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>uri-template</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://tools.ietf.org/html/rfc6570">RFC 6570</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"/grades/{id}"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"/users/{id}"</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>iri</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://tools.ietf.org/html/rfc3987">RFC 3987</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"https://växjö.example/"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"https://bücher.example/"</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
@@ -2804,13 +2815,19 @@ You <strong>must</strong> use these formats, whenever applicable:</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>iso-3166-alpha-2</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">two letter country code&#8201;&#8212;&#8201;see <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>. Hint: In the past we used <code>iso-3166</code> as format.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"GB"</code>  <strong>Hint:</strong> It is <code>"GB"</code>, not <code>"UK"</code>, even though <code>"UK"</code> has seen some use at ist.com <code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"GB"</code>  <strong>Hint:</strong> It is <code>"GB"</code>, not <code>"UK"</code>, even though <code>"UK"</code> has seen some use at Zalando.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>iso-4217</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">three letter currency code&#8201;&#8212;&#8201;see <a href="https://en.wikipedia.org/wiki/ISO_4217">ISO 4217</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>"EUR"</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gtin-13</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global Trade Item Number&#8201;&#8212;&#8201;see <a href="https://en.wikipedia.org/wiki/Global_Trade_Item_Number">GTIN</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"5710798389878"</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -3530,7 +3547,7 @@ information. More specifically, for JSON payload you should use the standard med
 <code>application/json</code> (or <code>application/problem+json</code> for <a href="#176"><span class="must-keyword"><strong>MUST</strong></span> support problem JSON</a>).</p>
 </div>
 <div class="paragraph">
-<p>You should avoid using custom media types like <code>application/x.ist+json</code>.
+<p>You should avoid using custom media types like <code>application/x.zalando.article+json</code>.
 Custom media types beginning with <code>x</code> bring no advantage compared to the
 standard media type for JSON, and make automated processing more difficult.</p>
 </div>
@@ -3821,6 +3838,9 @@ The following guidelines define standard objects and fields:</p>
 <li>
 <p><a href="#249"><span class="must-keyword"><strong>MUST</strong></span> use the common address fields</a></p>
 </li>
+<li>
+<p><a href="#173"><span class="must-keyword"><strong>MUST</strong></span> use the common money object</a></p>
+</li>
 </ul>
 </div>
 <div class="paragraph">
@@ -3947,6 +3967,154 @@ into a single type when modeling an address label vs distinct addressee
 and address types when modeling users and their addresses).</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="173"><a class="link" href="#173"><span class="must-keyword"><strong>MUST</strong></span> use the common money object</a></h3>
+<div class="paragraph">
+<p>Use the following common money structure:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">Money</span>:
+  <span class="key">type</span>: <span class="string"><span class="content">object</span></span>
+  <span class="key">properties</span>:
+    <span class="key">amount</span>:
+      <span class="key">type</span>: <span class="string"><span class="content">number</span></span>
+      <span class="key">description</span>: <span class="string"><span class="delimiter">&gt;</span><span class="content">
+        The amount describes unit and subunit of the currency in a single value,
+        where the integer part (digits before the decimal point) is for the
+        major unit and fractional part (digits after the decimal point) is for
+        the minor unit.</span></span>
+      <span class="key">format</span>: <span class="string"><span class="content">decimal</span></span>
+      <span class="key">example</span>: <span class="string"><span class="content">99.95</span></span>
+    <span class="key">currency</span>:
+      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
+      <span class="key">description</span>: <span class="string"><span class="content">3 letter currency code as defined by ISO-4217</span></span>
+      <span class="key">format</span>: <span class="string"><span class="content">iso-4217</span></span>
+      <span class="key">example</span>: <span class="string"><span class="content">EUR</span></span>
+  <span class="key">required</span>:
+    - <span class="string"><span class="content">amount</span></span>
+    - <span class="string"><span class="content">currency</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>APIs are encouraged to include a reference to the global schema for Money.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">SalesOrder</span>:
+  <span class="key">properties</span>:
+    <span class="key">grand_total</span>:
+      <span class="error">$ref</span>: <span class="error">'https://opensource.zalando.com/restful-api-guidelines/models/money-1.0.0.yaml#/Money'</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Please note that APIs have to treat Money as a closed data type, i.e. it&#8217;s not meant to be used in an inheritance hierarchy. That means the following usage is not allowed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json">{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">amount</span><span class="delimiter">&quot;</span></span>: <span class="float">19.99</span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">currency</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">EUR</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">discounted_amount</span><span class="delimiter">&quot;</span></span>: <span class="float">9.99</span>
+}</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_cons"><a class="link" href="#_cons">Cons</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Violates the <a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle">Liskov Substitution Principle</a></p>
+</li>
+<li>
+<p>Breaks existing library support, e.g. <a href="https://github.com/zalando/jackson-datatype-money">Jackson Datatype Money</a></p>
+</li>
+<li>
+<p>Less flexible since both amounts are coupled together, e.g. mixed currencies are impossible</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A better approach is to favor <a href="https://en.wikipedia.org/wiki/Composition_over_inheritance">composition over inheritance</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json">{
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">price</span><span class="delimiter">&quot;</span></span>: {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">amount</span><span class="delimiter">&quot;</span></span>: <span class="float">19.99</span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">currency</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">EUR</span><span class="delimiter">&quot;</span></span>
+    },
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">discounted_price</span><span class="delimiter">&quot;</span></span>: {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">amount</span><span class="delimiter">&quot;</span></span>: <span class="float">9.99</span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">currency</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">EUR</span><span class="delimiter">&quot;</span></span>
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pros"><a class="link" href="#_pros">Pros</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p>No inheritance, hence no issue with the substitution principle</p>
+</li>
+<li>
+<p>Makes use of existing library support</p>
+</li>
+<li>
+<p>No coupling, i.e. mixed currencies is an option</p>
+</li>
+<li>
+<p>Prices are now self-describing, atomic values</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notes"><a class="link" href="#_notes">Notes</a></h4>
+<div class="paragraph">
+<p>Please be aware that some business cases (e.g. transactions in Bitcoin) call for a higher precision, so applications must be prepared to accept values with unlimited precision, unless explicitly stated otherwise in the API specification.</p>
+</div>
+<div class="paragraph">
+<p>Examples for correct representations (in EUR):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>42.20</code> or <code>42.2</code> = 42 Euros, 20 Cent</p>
+</li>
+<li>
+<p><code>0.23</code> = 23 Cent</p>
+</li>
+<li>
+<p><code>42.0</code> or <code>42</code> = 42 Euros</p>
+</li>
+<li>
+<p><code>1024.42</code> = 1024 Euros, 42 Cent</p>
+</li>
+<li>
+<p><code>1024.4225</code> = 1024 Euros, 42.25 Cent</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Make sure that you don’t convert the "amount" field to <code>float</code> /
+<code>double</code> types when implementing this interface in a specific language
+or when doing calculations. Otherwise, you might lose precision.
+Instead, use exact formats like Java’s
+<a href="https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html"><code>BigDecimal</code></a>.
+See <a href="http://stackoverflow.com/a/3730040/342852">Stack Overflow</a> for more
+info.</p>
+</div>
+<div class="paragraph">
+<p>Some JSON parsers (NodeJS’s, for example) convert numbers to floats by default.
+After discussing the pros and cons we’ve decided on "decimal" as our amount
+format. It is not a standard OpenAPI format, but should help us to avoid parsing
+numbers as float / doubles.</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -3975,7 +4143,7 @@ resource does not exist</p>
 collection is empty) or <a href="#status-code-404" class="status-code">404</a> (if the collection is missing)</p>
 </li>
 <li>
-<p><a href="#get"><code>GET</code></a> requests must NOT have a request body payload</p>
+<p><a href="#get"><code>GET</code></a> requests must NOT have a request body payload (see <a href="#get-with-body"><code>GET with body</code></a>)</p>
 </li>
 </ul>
 </div>
@@ -3985,9 +4153,68 @@ collection is empty) or <a href="#status-code-404" class="status-code">404</a> (
 </div>
 </div>
 <div class="sect3">
+<h4 id="get-with-body"><a class="link" href="#get-with-body">GET with body payload</a></h4>
+<div class="paragraph">
+<p>APIs sometimes face the problem, that they have to provide extensive structured
+request information with <a href="#get"><code>GET</code></a>, that may conflict with the size limits of
+clients, load-balancers, and servers. As we require APIs to be standard conform
+(request body payload in <a href="#get"><code>GET</code></a> must be ignored on server side), API designers have to check the
+following two options:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#get"><code>GET</code></a> with URL encoded query parameters: when it is possible to encode the
+request information in query parameters, respecting the usual size limits of
+clients, gateways, and servers, this should be the first choice. The request
+information can either be provided via multiple query parameters or by a
+single structured URL encoded string.</p>
+</li>
+<li>
+<p><a href="#post"><code>POST</code></a> with body payload content: when a <a href="#get"><code>GET</code></a> with URL encoded query parameters
+is not possible, a <a href="#post"><code>POST</code></a> request with body payload must be used, and explicitly
+documented with a hint like in the following example:</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">paths</span>:
+  <span class="key">/products</span>:
+    <span class="key">post</span>:
+      <span class="key">description</span>: <span class="string"><span class="delimiter">&gt;</span><span class="content">
+        [GET with body payload](https://opensource.zalando.com/restful-api-guidelines/#get-with-body) - no resources created:
+        Returns all products matching the query passed as request input payload.</span></span>
+      <span class="key">requestBody</span>:
+        <span class="key">required</span>: <span class="string"><span class="content">true</span></span>
+        <span class="key">content</span>:
+          <span class="error">...</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Note:</strong> It is no option to encode the lengthy structured request information
+using header parameters. From a conceptual point of view, the semantic of an
+operation should always be expressed by the resource names, as well as the
+involved path and query parameters. In other words by everything that goes into
+the URL. Request headers are reserved for general context information (see
+<a href="#183"><span class="should-keyword"><strong>SHOULD</strong></span> use only the specified proprietary Zalando headers</a>). In addition, size limits on query parameters and headers are not
+reliable and depend on clients, gateways, server, and actual settings. Thus,
+switching to headers does not solve the original problem.</p>
+</div>
+<div class="paragraph">
+<p><strong>Hint:</strong> As <a href="#get-with-body"><code>GET with body</code></a> is used to transport extensive query parameters,
+the <a href="#cursor"><code>cursor</code></a> cannot any longer be used to encode the query filters in case of
+<a href="#160">cursor-based pagination</a>. As a consequence, it is best practice to
+transport the query filters in the body payload, while using <a href="#161">pagination links</a>
+containing the <a href="#cursor"><code>cursor</code></a> that is only encoding the page position and direction.
+To protect the pagination sequence the <a href="#cursor"><code>cursor</code></a> may contain a hash over all
+applied query filters (See also <a href="#161"><span class="should-keyword"><strong>SHOULD</strong></span> use pagination links where applicable</a>).</p>
+</div>
+</div>
+<div class="sect3">
 <h4 id="put"><a class="link" href="#put">PUT</a></h4>
 <div class="paragraph">
-<p><a href="#put"><code>PUT</code></a> requests are used to <strong>replace</strong> (and sometimes to create) <strong>entire</strong>
+<p><a href="#put"><code>PUT</code></a> requests are used to <strong>update</strong> (and sometimes to create) <strong>entire</strong>
 resources – single or collection resources. The semantic is best described
 as <em>"please put the enclosed representation at the resource mentioned by
 the URL, replacing any existing resource."</em>.</p>
@@ -4060,6 +4287,11 @@ was accepted but has not been finished yet), and exceptionally <a href="#status-
 <p><strong>Note:</strong> By using <a href="#post"><code>POST</code></a> to create resources the resource ID must not be passed as
 request input date by the client, but created and maintained by the service and
 returned with the response payload.</p>
+</div>
+<div class="paragraph">
+<p>Apart from resource creation, <a href="#post"><code>POST</code></a> should be also used for scenarios that cannot
+be covered by the other methods sufficiently. However, in such cases make sure to
+document the fact that <a href="#post"><code>POST</code></a> is used as a workaround (see e.g. <a href="#get-with-body"><code>GET with body</code></a>).</p>
 </div>
 <div class="paragraph">
 <p><strong>Hint:</strong> Posting the same resource twice is <strong>not</strong> required to be <a href="#idempotent">idempotent</a>
@@ -4208,6 +4440,18 @@ details).</p>
 </div>
 </div>
 <div class="sect3">
+<h4 id="delete-with-body"><a class="link" href="#delete-with-body">DELETE with body payload</a></h4>
+<div class="paragraph">
+<p>In rare cases <a href="#delete"><code>DELETE</code></a> may require additional information, that cannot be
+classified as filter parameters and thus should be transported via request body payload, to
+perform the operation. Since <a href="https://tools.ietf.org/html/rfc7231#section-4.3.5">RFC-7231</a> states, that
+<a href="#delete"><code>DELETE</code></a> has an undefined semantic for payloads, we recommend to utilize <a href="#post"><code>POST</code></a>.
+In this case the POST endpoint must be documented with the hint <a href="#delete-with-body"><code>DELETE with body</code></a>
+analog to how it is defined for <a href="#get-with-body"><code>GET with body</code></a>. The response status code of
+<a href="#delete-with-body"><code>DELETE with body</code></a> requests should be similar to usual <a href="#delete"><code>DELETE</code></a> requests.</p>
+</div>
+</div>
+<div class="sect3">
 <h4 id="head"><a class="link" href="#head">HEAD</a></h4>
 <div class="paragraph">
 <p><a href="#head"><code>HEAD</code></a> requests are used to <strong>retrieve</strong> the header information of single
@@ -4351,7 +4595,7 @@ to <a href="https://tools.ietf.org/html/rfc7231">RFC 7231</a>:</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p><strong>Note:</strong> <a href="#227"><span class="must-keyword"><strong>MUST</strong></span> document cacheable <code>GET</code> and <code>HEAD</code> endpoints</a>.</p>
+<p><strong>Note:</strong> <a href="#227"><span class="must-keyword"><strong>MUST</strong></span> document cacheable <code>GET</code>, <code>HEAD</code>, and <code>POST</code> endpoints</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -4719,6 +4963,10 @@ provides the following benefits:</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p><a href="#json-guidelines">JSON-specific rules</a> and most certainly needs to make use
+of the <a href="#get-with-body"><code>GET</code>-with-body</a> pattern.</p>
+</div>
 <div class="sect3">
 <h4 id="_example"><a class="link" href="#_example">Example</a></h4>
 <div class="paragraph">
@@ -4953,7 +5201,7 @@ with the Location header. (More details found in the <a href="#standard-headers"
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="status-code-204"></a><a href="#status-code-204" class="status-code">204</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No content - There is no response body.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#put"><code>PUT</code></a>, <a href="#patch"><code>PATCH</code></a>, <a href="#delete"><code>DELETE</code></a>, <a href="#head"><code>HEAD</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#put"><code>PUT</code></a>, <a href="#patch"><code>PATCH</code></a>, <a href="#delete"><code>DELETE</code></a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="status-code-207"></a><a href="#status-code-207" class="status-code">207</a></p></td>
@@ -5314,7 +5562,9 @@ include <code>application/problem+json</code> in the <a href="https://tools.ietf
 of the extended failure information.</p>
 </div>
 <div class="paragraph">
-<p>IST uses a specific error format that looks like:</p>
+<p>The OpenAPI schema definition of the Problem JSON object can be found
+<a href="https://opensource.zalando.com/restful-api-guidelines/models/problem-1.0.1.yaml">on
+GitHub</a>. You can reference it by using:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5324,28 +5574,7 @@ of the extended failure information.</p>
     <span class="key">content</span>:
       <span class="key"><span class="delimiter">&quot;</span><span class="content">application/problem+json</span><span class="delimiter">&quot;</span></span>:
         <span class="key">schema</span>:
-          <span class="key">type</span>: <span class="string"><span class="content">object</span></span>
-          <span class="key">x-examples</span>:
-            <span class="key">example-1</span>:
-              <span class="key">trace</span>: <span class="string"><span class="content">cd05b1fc-bc10-4ba6-9a9f-b73c503dbd77</span></span>
-              <span class="key">errors</span>:
-                - <span class="string"><span class="content">code: SELF_MANAGEMENT_NOT_ALLOWED</span></span>
-                  <span class="key">message</span>: <span class="string"><span class="content">Users are not allowed to modify their own permissions</span></span>
-          <span class="key">properties</span>:
-            <span class="key">trace</span>:
-              <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
-              <span class="key">format</span>: <span class="string"><span class="content">uuid</span></span>
-            <span class="key">errors</span>:
-              <span class="key">type</span>: <span class="string"><span class="content">array</span></span>
-              <span class="key">items</span>:
-                <span class="key">type</span>: <span class="string"><span class="content">object</span></span>
-                <span class="key">properties</span>:
-                  <span class="key">code</span>:
-                    <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
-                    <span class="key">example</span>: <span class="string"><span class="content">SELF_MANAGEMENT_NOT_ALLOWED</span></span>
-                  <span class="key">message</span>:
-                    <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
-                    <span class="key">example</span>: <span class="string"><span class="content">Users are not allowed to modify their own permissions</span></span></code></pre>
+          <span class="error">$ref</span>: <span class="error">'https://opensource.zalando.com/restful-api-guidelines/models/problem-1.0.1.yaml#/Problem'</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5361,6 +5590,33 @@ decided against that, as all important parts of the API must be documented
 using <a href="#101">OpenAPI</a> anyway. In addition, URLs tend to be fragile and not
 very stable over longer periods because of organizational and documentation
 changes and descriptions might easily get out of sync.</p>
+</div>
+<div class="paragraph">
+<p>In order to stay compatible with <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a> we proposed to use
+<a href="https://tools.ietf.org/html/rfc3986#section-4.1">relative URI references</a>
+usually defined by <code>absolute-path [ '?' query ] [ '#' fragment ]</code> as simplified
+identifiers in <code>type</code> and <code>instance</code> fields:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>/problems/out-of-stock</code></p>
+</li>
+<li>
+<p><code>/problems/insufficient-funds</code></p>
+</li>
+<li>
+<p><code>/problems/user-deactivated</code></p>
+</li>
+<li>
+<p><code>/problems/connection-error#read-timeout</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Hint:</strong> The use of <a href="https://tools.ietf.org/html/rfc3986#section-4.3">absolute
+URIs</a> is not forbidden but strongly discouraged. If you use absolute URIs,
+please reference <a href="https://opensource.zalando.com/restful-api-guidelines/models/problem-1.0.0.yaml#/Problem">problem-1.0.0.yaml#/Problem</a> instead.</p>
 </div>
 </div>
 <div class="sect2">
@@ -5721,6 +5977,272 @@ The header addresses a generic REST concern and is different from the
 Zalando landscape specific proprietary headers.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="183"><a class="link" href="#183"><span class="should-keyword"><strong>SHOULD</strong></span> use only the specified proprietary Zalando headers</a></h3>
+<div class="paragraph">
+<p>As a general rule, proprietary HTTP headers should be avoided.
+From a conceptual point of view, the business semantics and intent of an
+operation should always be expressed via the URLs path and query parameters,
+the method, and the content, but not via proprietary headers.
+Headers are typically used to implement protocol processing aspects, such as flow control,
+content negotiation, and authentication, and represent business agnostic
+request modifiers that provide generic context information (<a href="https://tools.ietf.org/html/rfc7231#section-5">RFC 7231</a>).</p>
+</div>
+<div class="paragraph">
+<p>However, the exceptional usage of proprietary headers is still helpful
+when domain-specific generic context information&#8230;&#8203;</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>needs to be passed end to end along the service call chain (even if
+not all called services use it as input for steering service behavior
+e.g. <a href="#x-sales-channel"><code>X-Sales-Channel</code></a> header) and/or&#8230;&#8203;</p>
+</li>
+<li>
+<p>is provided by specific gateway components, for instance, our
+Fashion Shop API or Merchant API gateway.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Below, we explicitly define the list of proprietary header exceptions usable for
+all services for passing through generic context information of our fashion domain (use case 1).</p>
+</div>
+<div class="paragraph">
+<p>Per convention, non standardized, proprietary header names are prefixed with  <code>X-</code>.
+(Due to backward compatibility, we do not follow the Internet Engineering Task Force’s
+recommendation in <a href="https://tools.ietf.org/html/rfc6648">RFC 6648</a> to deprecate usage of  <code>X-</code> headers.)
+Remember that HTTP header field names are not case-sensitive:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 15%;">
+<col style="width: 10%;">
+<col style="width: 60%;">
+<col style="width: 15%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Header field name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Header field value example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="x-flow-id"></a><a href="#x-flow-id"><code>X-Flow-ID</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For more information see <a href="#233"><span class="must-keyword"><strong>MUST</strong></span> support <code>X-Flow-ID</code></a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GKY7oDhpSiKY_gAAAABZ_A</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="x-tenant-id"></a><a href="#x-tenant-id"><code>X-Tenant-ID</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifies the tenant initiated the request
+to the multi tenant Zalando Platform. The <a href="#x-tenant-id"><code>X-Tenant-ID</code></a> must be set
+according to the Business Partner ID extracted from the OAuth token when
+a request from a Business Partner hits the Zalando Platform.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9f8b3ca3-4be5-436c-a847-9cd55460c495</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="x-frontend-type"></a><a href="#x-frontend-type"><code>X-Frontend-Type</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consumer facing applications (CFAs) provide business experience to their
+customers via different frontend application types, for instance, mobile app
+or browser. Info should be passed-through as generic aspect&#8201;&#8212;&#8201;there are
+diverse concerns, e.g. pushing mobiles with specific coupons, that make use of
+it. Current range is mobile-app, browser, facebook-app, chat-app, email.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mobile-app</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="x-device-type"></a><a href="#x-device-type"><code>X-Device-Type</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">There are also use cases for steering customer experience (incl. features and
+content) depending on device type. Via this header info should be passed-through
+as generic aspect. Current range is smartphone, tablet, desktop, other.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tablet</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="x-device-os"></a><a href="#x-device-os"><code>X-Device-OS</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">On top of device type above, we even want to differ between device platform,
+e.g. smartphone Android vs. iOS. Via this header info should be passed-through
+as generic aspect. Current range is iOS, Android, Windows, Linux, MacOS.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Android</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="x-mobile-advertising-id"></a><a href="#x-mobile-advertising-id"><code>X-Mobile-Advertising-ID</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">It is either the
+<a href="https://developer.apple.com/documentation/adsupport/asidentifiermanager">IDFA</a>
+(Apple Identifier for mobile Advertising) for iOS, or the
+<a href="https://support.google.com/googleplay/android-developer/answer/6048248">GAID</a>
+(Google mobile Advertising Identifier) for Android. It is a unique,
+customer-resettable identifier provided by mobile device’s operating system
+to facilitate personalized advertising, and usually passed by mobile apps via http header
+when calling backend services. Called services should be ready to pass this
+parameter through when calling other services. It is not sent if the customer
+disables it in the settings for respective mobile platform.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">b89fadce-1f42-46aa-9c83-b7bc49e76e1f</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Exception:</strong> The only exception to this guideline are the conventional
+hop-by-hop <code>X-RateLimit-</code> headers which can be used as defined in <a href="#153"><span class="must-keyword"><strong>MUST</strong></span> use code 429 with headers for rate limits</a>.</p>
+</div>
+<div class="paragraph">
+<p>As part of the guidelines we sourced the OpenAPI definition of all proprietary headers;
+you can simply reference it when defining the API endpoint requests e.g.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">parameters</span>:
+- <span class="string"><span class="content">$ref: &quot;https://opensource.zalando.com/restful-api-guidelines/models/request-headers-1.0.0.yaml#/X-Flow-ID&quot;</span></span>
+- <span class="string"><span class="content">$ref: &quot;https://opensource.zalando.com/restful-api-guidelines/models/request-headers-1.0.0.yaml#/X-Tenant-ID&quot;</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Response headers can be referenced in the API endpoint e.g.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">parameters</span>:
+- <span class="string"><span class="content">$ref: &quot;https://opensource.zalando.com/restful-api-guidelines/models/response-headers-1.0.0.yaml#/ETag&quot;</span></span>
+- <span class="string"><span class="content">$ref: &quot;https://opensource.zalando.com/restful-api-guidelines/models/response-headers-1.0.0.yaml#/Cache-Control&quot;</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Hint:</strong> This guideline does not standardize proprietary headers for
+our specific gateway components (2. use case above).
+This include, for instance, non pass-through headers <code>X-Zalando-Client-ID</code>, <code>X-Zalando-Request-Host</code>,
+<code>X-Zalando-Request-URI</code> defined by Fashion Shop API (RKeep), or <code>X-Consumer</code>, <code>X-Consumer-Signature</code>,
+<code>X-Consumer-Key-ID</code> defined by Merchant API gateway.
+All these proprietary headers are allowlisted in the API Linter (Zally) checking this rule.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="184"><a class="link" href="#184"><span class="must-keyword"><strong>MUST</strong></span> propagate proprietary headers</a></h3>
+<div class="paragraph">
+<p>All Zalando&#8217;s proprietary headers listed above are end-to-end headers
+<sup class="footnote" id="_footnote_header-types">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup>
+and must be propagated to the services down the call
+chain. The header names and values must remain unchanged.</p>
+</div>
+<div class="paragraph">
+<p>For example, the values of the custom headers like <a href="#x-device-type"><code>X-Device-Type</code></a> can affect
+the results of queries by using device type information to influence
+recommendation results. Besides, the values of the custom headers can influence
+the results of the queries (e.g. the device type information influences the
+recommendation results).</p>
+</div>
+<div class="paragraph">
+<p>Sometimes the value of a proprietary header will be used as part of the entity
+in a subsequent request. In such cases, the proprietary headers must still be
+propagated as headers with the subsequent request, despite the duplication of
+information.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="233"><a class="link" href="#233"><span class="must-keyword"><strong>MUST</strong></span> support <a href="#x-flow-id"><code>X-Flow-ID</code></a></a></h3>
+<div class="paragraph">
+<p>The <a href="#flow-id"><code>Flow-ID</code></a> is a generic parameter to be passed through service APIs and
+events and written into log files and traces. A consequent usage of the
+<a href="#flow-id"><code>Flow-ID</code></a> facilitates the tracking of call flows through our system and allows
+the correlation of service activities initiated by a specific call. This is
+extremely helpful for operational troubleshooting and log analysis. Main use
+case of <a href="#flow-id"><code>Flow-ID</code></a> is to track service calls of our SaaS fashion commerce
+platform and initiated internal processing flows (executed synchronously via
+APIs or asynchronously via published events).</p>
+</div>
+<div class="sect3">
+<h4 id="_data_definition"><a class="link" href="#_data_definition">Data Definition</a></h4>
+<div class="paragraph">
+<p>The <a href="#flow-id"><code>Flow-ID</code></a> must be passed through:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>RESTful API requests via <a href="#x-flow-id"><code>X-Flow-ID</code></a> proprietary header (see <a href="#184"><span class="must-keyword"><strong>MUST</strong></span> propagate proprietary headers</a>)</p>
+</li>
+<li>
+<p>Published events via <code>flow_id</code> event field (see <a href="#event-metadata">metadata</a>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following formats are allowed:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>UUID</code> (<a href="https://tools.ietf.org/html/rfc4122">RFC-4122</a>)</p>
+</li>
+<li>
+<p><code>base64</code> (<a href="https://tools.ietf.org/html/rfc4648">RFC-4648</a>)</p>
+</li>
+<li>
+<p><code>base64url</code> (<a href="https://tools.ietf.org/html/rfc4648#section-5">RFC-4648 Section 5</a>)</p>
+</li>
+<li>
+<p>Random unique string restricted to the character set <code>[a-zA-Z0-9/+_-=]</code> maximal of 128 characters.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Note:</strong> If a legacy subsystem can only process <code>Flow-IDs</code> with a specific
+format or length, it must define this restriction in its API specification,
+and be generous and remove invalid characters or cut the length to the
+supported limit.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_service_guidance"><a class="link" href="#_service_guidance">Service Guidance</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Services <strong>must</strong> support <a href="#flow-id"><code>Flow-ID</code></a> as generic input, i.e.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>RESTful API endpoints <strong>must</strong> support <a href="#x-flow-id"><code>X-Flow-ID</code></a> header in requests</p>
+</li>
+<li>
+<p>Event listeners <strong>must</strong> support the metadata <code>flow-id</code> from events.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Note:</strong> API-Clients <strong>must</strong> provide <a href="#flow-id"><code>Flow-ID</code></a> when calling a service or
+producing events. If no <a href="#flow-id"><code>Flow-ID</code></a> is provided in a request or event, the
+service must create a new <a href="#flow-id"><code>Flow-ID</code></a>.</p>
+</div>
+</li>
+<li>
+<p>Services <strong>must</strong> propagate <a href="#flow-id"><code>Flow-ID</code></a>, i.e. use <a href="#flow-id"><code>Flow-ID</code></a> received
+with API calls or consumed events as&#8230;&#8203;</p>
+<div class="ulist">
+<ul>
+<li>
+<p>input for all API called and events published during processing</p>
+</li>
+<li>
+<p>data field written for logging and tracing</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Hint:</strong> This rule also applies to application internal interfaces and events
+not published via Nakadi (but e.g. via AWS SQS, Kinesis or service specific
+DB solutions).</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -5839,43 +6361,20 @@ reserved for usage within hypertext controls.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">Link</span>:
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">HttpLink</span>:
+  <span class="key">description</span>: <span class="string"><span class="content">A base type of objects representing links to resources.</span></span>
   <span class="key">type</span>: <span class="string"><span class="content">object</span></span>
-  <span class="key">x-examples</span>:
-    <span class="key">example-1</span>:
-      <span class="key">href</span>: <span class="string"><span class="content">/users/123</span></span>
-      <span class="key">title</span>: <span class="string"><span class="content">User 123</span></span>
-      <span class="key">description</span>: <span class="string"><span class="content">Go to the user with ID 123</span></span>
-      <span class="key">rel</span>: <span class="string"><span class="content">self</span></span>
-      <span class="key">type</span>: <span class="string"><span class="content">GET</span></span>
-  <span class="key">title</span>: <span class="string"><span class="content">''</span></span>
   <span class="key">properties</span>:
     <span class="key">href</span>:
+      <span class="key">description</span>: <span class="string"><span class="content">Any URI that is using http or https protocol</span></span>
       <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
       <span class="key">format</span>: <span class="string"><span class="content">uri</span></span>
-      <span class="key">example</span>: <span class="string"><span class="content">'https://example-api.ist.com/'</span></span>
-    <span class="key">title</span>:
-      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
-    <span class="key">description</span>:
-      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
-    <span class="key">rel</span>:
-      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
-      <span class="key">example</span>: <span class="string"><span class="content">self</span></span>
-    <span class="key">type</span>:
-      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
-      <span class="key">enum</span>:
-        - <span class="string"><span class="content">GET</span></span>
-        - <span class="string"><span class="content">POST</span></span>
-        - <span class="string"><span class="content">PUT</span></span>
-        - <span class="string"><span class="content">PATCH</span></span>
-        - <span class="string"><span class="content">DELETE</span></span>
-      <span class="key">example</span>: <span class="string"><span class="content">GET</span></span>
   <span class="key">required</span>:
     - <span class="string"><span class="content">href</span></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The name of an attribute holding such a <code>Link</code> object specifies the
+<p>The name of an attribute holding such a <code>HttpLink</code> object specifies the
 relation between the object that contains the link and the linked resource.
 Implementations should use names from the <a href="http://www.iana.org/assignments/link-relations">IANA Link Relation Registry</a>
 whenever appropriate. As IANA link relation
@@ -5967,7 +6466,8 @@ As a result, the use of the <a href="https://tools.ietf.org/html/rfc8288#section
 This holds for APIs that (might) have high payloads and/or are used in
 high-traffic scenarios like the public Internet and telecommunication networks.
 Typical examples are APIs used by mobile web app clients with (often) less
-bandwidth connectivity (IST is a company active in a variety of markets some of which bandwith might be limited, so be mindful of this point).</p>
+bandwidth connectivity. (Zalando is a 'Mobile First' company, so be mindful of
+this point.)</p>
 </div>
 <div class="paragraph">
 <p>Common techniques include:</p>
@@ -5994,7 +6494,7 @@ processing requirements of clients (see <a href="#181"><span class="may-keyword"
 </li>
 <li>
 <p>caching of master data items, i.e. resources that change rarely or not
-at all after creation (see <a href="#227"><span class="must-keyword"><strong>MUST</strong></span> document cacheable <code>GET</code> and <code>HEAD</code> endpoints</a>).</p>
+at all after creation (see <a href="#227"><span class="must-keyword"><strong>MUST</strong></span> document cacheable <code>GET</code>, <code>HEAD</code>, and <code>POST</code> endpoints</a>).</p>
 </li>
 </ul>
 </div>
@@ -6156,7 +6656,7 @@ resource has its order items as sub-resource (/order/{orderId}/items):</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="227"><a class="link" href="#227"><span class="must-keyword"><strong>MUST</strong></span> document cacheable <code>GET</code> and <code>HEAD</code> endpoints</a></h3>
+<h3 id="227"><a class="link" href="#227"><span class="must-keyword"><strong>MUST</strong></span> document cacheable <code>GET</code>, <code>HEAD</code>, and <code>POST</code> endpoints</a></h3>
 <div class="paragraph">
 <p>Caching has to take many aspects into account, e.g. general <a href="#cacheable">cacheability</a> of response information, our guideline to protect endpoints
 using SSL and <a href="#104">OAuth authorization</a>, resource update and invalidation
@@ -6193,7 +6693,7 @@ following rules:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Document all <a href="#cacheable">cacheable</a> <a href="#get"><code>GET</code></a> and <a href="#head"><code>HEAD</code></a> endpoints by declaring
+<p>Document all <a href="#cacheable">cacheable</a> <a href="#get"><code>GET</code></a>, <a href="#head"><code>HEAD</code></a>, and <a href="#post"><code>POST</code></a> endpoints by declaring
 the support of <a href="https://tools.ietf.org/html/rfc7234#section-5.2"><code>Cache-Control</code></a>, <a href="https://tools.ietf.org/html/rfc7231#section-7.1.4"><code>Vary</code></a>, and <a href="https://tools.ietf.org/html/rfc7232#section-2.3"><code>ETag</code></a> headers in response.
 <strong>Note:</strong> you must not define the <a href="https://tools.ietf.org/html/rfc7234#section-5.3"><code>Expires</code></a> header to prevent redundant and
 ambiguous definition of cache lifetime. A sensible default documentation of
@@ -6486,7 +6986,7 @@ page (<a href="#items"><code>items</code></a> may be replaced by a resource name
 </div>
 <div class="paragraph">
 <p>To simplify user experience, the applied query filters may be returned using
-the following field:</p>
+the following field (see also <a href="#get-with-body"><code>GET with body</code></a>):</p>
 </div>
 <div class="ulist">
 <ul>
@@ -6556,11 +7056,11 @@ also <a href="#pagination-fields">[pagination-fields]</a> for details):</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="json">{
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">self</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://api.ist.com/service-name/resources?cursor=&lt;self-position&gt;</span><span class="delimiter">&quot;</span></span>,
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">first</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://api.ist.com/service-name/resources?cursor=&lt;first-position&gt;</span><span class="delimiter">&quot;</span></span>,
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">prev</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://api.ist.com/service-name/resources?cursor=&lt;previous-position&gt;</span><span class="delimiter">&quot;</span></span>,
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">next</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://api.ist.com/service-name/resources?cursor=&lt;next-position&gt;</span><span class="delimiter">&quot;</span></span>,
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">last</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://api.ist.com/service-name/resources?cursor=&lt;last-position&gt;</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">self</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://my-service.zalandoapis.com/resources?cursor=&lt;self-position&gt;</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">first</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://my-service.zalandoapis.com/resources?cursor=&lt;first-position&gt;</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">prev</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://my-service.zalandoapis.com/resources?cursor=&lt;previous-position&gt;</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">next</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://my-service.zalandoapis.com/resources?cursor=&lt;next-position&gt;</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">last</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://my-service.zalandoapis.com/resources?cursor=&lt;last-position&gt;</span><span class="delimiter">&quot;</span></span>,
   <span class="key"><span class="delimiter">&quot;</span><span class="content">query</span><span class="delimiter">&quot;</span></span>: {
     <span class="key"><span class="delimiter">&quot;</span><span class="content">query-param-&lt;1&gt;</span><span class="delimiter">&quot;</span></span>: <span class="error">.</span><span class="error">.</span><span class="error">.</span>,
     <span class="key"><span class="delimiter">&quot;</span><span class="content">query-param-&lt;n&gt;</span><span class="delimiter">&quot;</span></span>: <span class="error">.</span><span class="error">.</span><span class="error">.</span>
@@ -8573,6 +9073,18 @@ workflow with OpenAPI YAML files (sorted alphabetically):</p>
 <div class="ulist">
 <ul>
 <li>
+<p><strong><a href="https://github.com/zalando/connexion">Connexion</a>:</strong>
+OpenAPI First framework for Python on top of Flask</p>
+</li>
+<li>
+<p><strong><a href="https://github.com/zalando-stups/friboo">Friboo</a>:</strong>
+utility library to write microservices in Clojure with support for Swagger and OAuth</p>
+</li>
+<li>
+<p><strong><a href="https://github.com/zalando/api-first-hand">Api-First-Hand</a>:</strong>
+API-First Play Bootstrapping Tool for Swagger/OpenAPI specs</p>
+</li>
+<li>
 <p><strong><a href="https://github.com/swagger-api/swagger-codegen">Swagger Codegen</a>:</strong>
 template-driven engine to generate client code in different languages by
 parsing Swagger Resource Declaration</p>
@@ -8719,7 +9231,9 @@ when progressing.</p>
 </div>
 </div>
 <div class="paragraph">
-<p><strong>Note:</strong> In case of complex and long search requests the <a href="#cursor"><code>cursor</code></a> may not be able to include the <code>query</code> because of common HTTP parameter size restrictions. In this case the <code>query</code> filters
+<p><strong>Note:</strong> In case of complex and long search requests, e.g. when <a href="#get-with-body"><code>GET with body</code></a>
+is already required, the <a href="#cursor"><code>cursor</code></a> may not be able to include the <code>query</code> because
+of common HTTP parameter size restrictions. In this case the <code>query</code> filters
 should be transported via body - in the request as well as in the response,
 while the pagination consistency should be ensured via the <code>query_hash</code>.</p>
 </div>
@@ -8814,7 +9328,7 @@ additional request is necessary.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_pros"><a class="link" href="#_pros">Pros</a></h5>
+<h5 id="_pros_2"><a class="link" href="#_pros_2">Pros</a></h5>
 <div class="ulist">
 <ul>
 <li>
@@ -8824,7 +9338,7 @@ additional request is necessary.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_cons"><a class="link" href="#_cons">Cons</a></h5>
+<h5 id="_cons_2"><a class="link" href="#_cons_2">Cons</a></h5>
 <div class="ulist">
 <ul>
 <li>
@@ -8876,7 +9390,7 @@ in the <a href="#put"><code>PUT</code></a> request payload.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_pros_2"><a class="link" href="#_pros_2">Pros</a></h5>
+<h5 id="_pros_3"><a class="link" href="#_pros_3">Pros</a></h5>
 <div class="ulist">
 <ul>
 <li>
@@ -8886,7 +9400,7 @@ in the <a href="#put"><code>PUT</code></a> request payload.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_cons_2"><a class="link" href="#_cons_2">Cons</a></h5>
+<h5 id="_cons_3"><a class="link" href="#_cons_3">Cons</a></h5>
 <div class="ulist">
 <ul>
 <li>
@@ -8946,7 +9460,7 @@ database is higher than the one given in the request body:</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_pros_3"><a class="link" href="#_pros_3">Pros</a></h5>
+<h5 id="_pros_4"><a class="link" href="#_pros_4">Pros</a></h5>
 <div class="ulist">
 <ul>
 <li>
@@ -8956,7 +9470,7 @@ database is higher than the one given in the request body:</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_cons_3"><a class="link" href="#_cons_3">Cons</a></h5>
+<h5 id="_cons_4"><a class="link" href="#_cons_4">Cons</a></h5>
 <div class="ulist">
 <ul>
 <li>
@@ -9021,7 +9535,7 @@ later than the given date:</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_pros_4"><a class="link" href="#_pros_4">Pros</a></h5>
+<h5 id="_pros_5"><a class="link" href="#_pros_5">Pros</a></h5>
 <div class="ulist">
 <ul>
 <li>
@@ -9042,7 +9556,7 @@ result</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_cons_4"><a class="link" href="#_cons_4">Cons</a></h5>
+<h5 id="_cons_5"><a class="link" href="#_cons_5">Cons</a></h5>
 <div class="ulist">
 <ul>
 <li>
@@ -9212,10 +9726,13 @@ window.cookieconsent.initialise({
 <div class="footnote" id="_footnotedef_1">
 <a href="#_footnoteref_1">1</a>. Per definition of R.Fielding REST APIs have to support HATEOAS (maturity level 3). Our guidelines do not strongly advocate for full REST compliance, but limited hypermedia usage, e.g. for pagination (see <a href="#hypermedia">REST Design - Hypermedia</a>). However, we still use the term "RESTful API", due to the absence of an alternative established term and to keep it like the very majority of web service industry that also use the term for their REST approximations — in fact, in today&#8217;s industry full HATEOAS compliant APIs are a very rare exception.
 </div>
+<div class="footnote" id="_footnotedef_2">
+<a href="#_footnoteref_2">2</a>. HTTP/1.1 standard (<a href="https://tools.ietf.org/html/rfc7230#section-6.1">RFC 7230</a>) defines two types of headers: end-to-end and hop-by-hop headers. End-to-end headers must be transmitted to the ultimate recipient of a request or response. Hop-by-hop headers, on the contrary, are meaningful for a single connection only.
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-10-25 05:40:31 UTC
+Last updated 2022-11-03 07:51:55 UTC
 </div>
 </div>
 </body>
