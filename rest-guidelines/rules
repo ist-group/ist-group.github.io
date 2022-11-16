@@ -543,10 +543,6 @@
     {
       "id": "#248",
       "title": "SHOULD use pagination response page object"
-    },
-    {
-      "id": "#249",
-      "title": "MUST use the common address fields"
     }
   ]
 }

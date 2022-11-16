@@ -1484,7 +1484,6 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#122"><span class="must-keyword"><strong>MUST</strong></span> not use <code>null</code> for boolean properties</a></li>
 <li><a href="#124"><span class="should-keyword"><strong>SHOULD</strong></span> not use <code>null</code> for empty arrays</a></li>
 <li><a href="#174"><span class="must-keyword"><strong>MUST</strong></span> use common field names and semantics</a></li>
-<li><a href="#249"><span class="must-keyword"><strong>MUST</strong></span> use the common address fields</a></li>
 </ul>
 </li>
 <li><a href="#http-requests">9. REST Basics - HTTP requests</a>
@@ -3610,10 +3609,6 @@ names:</p>
 <div class="paragraph">
 <p><strong>Hint:</strong> Use <code>format: date-time</code> (or as <code>format: date</code>) as required in <a href="#238"><span class="must-keyword"><strong>MUST</strong></span> use standard data formats</a>.</p>
 </div>
-<div class="paragraph">
-<p><strong>Note:</strong> <a href="#created"><code>created</code></a> and <a href="#modified"><code>modified</code></a> were mentioned in an earlier version of the
-guideline and are therefore still accepted for APIs that predate this rule.</p>
-</div>
 </div>
 <div class="sect2">
 <h3 id="216"><a class="link" href="#216"><span class="should-keyword"><strong>SHOULD</strong></span> define maps using <code>additionalProperties</code></a></h3>
@@ -3755,7 +3750,7 @@ used but having nullable references of these types completely contradicts their
 purpose.</p>
 </div>
 <div class="paragraph">
-<p>The only exception to this rule is JSON Merge Patch <a href="https://tools.ietf.org/html/rfc7396">RFC 7396</a>) which
+<p>The only exception to this rule is JSON Merge Patch (<a href="https://tools.ietf.org/html/rfc7396">RFC 7396</a>) which
 uses <code>null</code> to explicitly indicate property deletion while absent properties are
 ignored, i.e. not modified.</p>
 </div>
@@ -3818,9 +3813,6 @@ The following guidelines define standard objects and fields:</p>
 <li>
 <p><a href="#248"><span class="should-keyword"><strong>SHOULD</strong></span> use pagination response page object</a></p>
 </li>
-<li>
-<p><a href="#249"><span class="must-keyword"><strong>MUST</strong></span> use the common address fields</a></p>
-</li>
 </ul>
 </div>
 <div class="paragraph">
@@ -3851,100 +3843,6 @@ The following guidelines define standard objects and fields:</p>
     <span class="key">created_at</span>: <span class="string"><span class="content">'2017-04-12T23:20:50.52Z'</span></span>
     <span class="key">modified_at</span>: <span class="string"><span class="content">'2017-04-12T23:20:50.52Z'</span></span></code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="249"><a class="link" href="#249"><span class="must-keyword"><strong>MUST</strong></span> use the common address fields</a></h3>
-<div id="address-fields" class="paragraph">
-<p>Address structures play a role in different business and use-case
-contexts, including country variances. All attributes that relate to
-address information must follow the naming and semantics defined
-below.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">addressee</span>:
-  <span class="key">description</span>: <span class="string"><span class="content">a (natural or legal) person that gets addressed</span></span>
-  <span class="key">type</span>: <span class="string"><span class="content">object</span></span>
-  <span class="key">properties</span>:
-    <span class="key">salutation</span>:
-      <span class="key">description</span>: <span class="string"><span class="delimiter">|</span><span class="content">
-        a salutation and/or title used for personal contacts to some
-        addressee; not to be confused with the gender information!</span></span>
-      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
-      <span class="key">example</span>: <span class="string"><span class="content">Mr</span></span>
-    <span class="key">first_name</span>:
-      <span class="key">description</span>: <span class="string"><span class="delimiter">|</span><span class="content">
-        given name(s) or first name(s) of a person; may also include the
-        middle names.</span></span>
-      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
-      <span class="key">example</span>: <span class="string"><span class="content">Hans Dieter</span></span>
-    <span class="key">last_name</span>:
-      <span class="key">description</span>: <span class="string"><span class="delimiter">|</span><span class="content">
-        family name(s) or surname(s) of a person</span></span>
-      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
-      <span class="key">example</span>: <span class="string"><span class="content">Mustermann</span></span>
-    <span class="key">business_name</span>:
-      <span class="key">description</span>: <span class="string"><span class="delimiter">|</span><span class="content">
-        company name of the business organization. Used when a business is
-        the actual addressee; for personal shipments to office addresses, use
-        `care_of` instead.</span></span>
-      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
-      <span class="key">example</span>: <span class="string"><span class="content">Consulting Services GmbH</span></span>
-  <span class="key">required</span>:
-    - <span class="string"><span class="content">first_name</span></span>
-    - <span class="string"><span class="content">last_name</span></span>
-
-<span class="key">address</span>:
-  <span class="key">description</span>:
-    <span class="error">an address of a location/destination</span>
-  <span class="key">type</span>: <span class="string"><span class="content">object</span></span>
-  <span class="key">properties</span>:
-    <span class="key">care_of</span>:
-      <span class="key">description</span>: <span class="string"><span class="delimiter">|</span><span class="content">
-        (aka c/o) the person that resides at the address, if different from
-        addressee. E.g. used when sending a personal parcel to the
-        office /someone else's home where the addressee resides temporarily</span></span>
-      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
-      <span class="key">example</span>: <span class="string"><span class="content">Consulting Services GmbH</span></span>
-    <span class="key">street</span>:
-      <span class="key">description</span>: <span class="string"><span class="delimiter">|</span><span class="content">
-        the full street address including house number and street name</span></span>
-      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
-      <span class="key">example</span>: <span class="string"><span class="content">Schönhauser Allee 103</span></span>
-    <span class="key">additional</span>:
-      <span class="key">description</span>: <span class="string"><span class="delimiter">|</span><span class="content">
-        further details like building name, suite, apartment number, etc.</span></span>
-      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
-      <span class="key">example</span>: <span class="string"><span class="content">2. Hinterhof rechts</span></span>
-    <span class="key">city</span>:
-      <span class="key">description</span>: <span class="string"><span class="delimiter">|</span><span class="content">
-        name of the city / locality</span></span>
-      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
-      <span class="key">example</span>: <span class="string"><span class="content">Berlin</span></span>
-    <span class="key">zip</span>:
-      <span class="key">description</span>: <span class="string"><span class="delimiter">|</span><span class="content">
-        zip code or postal code</span></span>
-      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
-      <span class="key">example</span>: <span class="string"><span class="content">14265</span></span>
-    <span class="key">country_code</span>:
-      <span class="key">description</span>: <span class="string"><span class="delimiter">|</span><span class="content">
-        the country code according to
-        [iso-3166-1-alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)</span></span>
-      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
-      <span class="key">example</span>: <span class="string"><span class="content">DE</span></span>
-  <span class="key">required</span>:
-    - <span class="string"><span class="content">street</span></span>
-    - <span class="string"><span class="content">city</span></span>
-    - <span class="string"><span class="content">zip</span></span>
-    - <span class="string"><span class="content">country_code</span></span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Grouping and cardinality of fields in specific data types may vary based
-on the specific use case (e.g. combining addressee and address fields
-into a single type when modeling an address label vs distinct addressee
-and address types when modeling users and their addresses).</p>
 </div>
 </div>
 </div>
@@ -9220,7 +9118,7 @@ window.cookieconsent.initialise({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-11-09 10:23:48 UTC
+Last updated 2022-11-16 10:09:25 UTC
 </div>
 </div>
 </body>
