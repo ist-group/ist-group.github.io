@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.18">
+<meta name="generator" content="Asciidoctor 2.0.20">
 <meta name="keywords" content="IST, Guidelines, RESTful, API, Events, Schema">
 <meta name="copyright" content="CC-BY-SA 4.0">
 <title>IST RESTful API Guidelines</title>
@@ -1580,7 +1580,8 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#193"><span class="should-keyword"><strong>SHOULD</strong></span> monitor API usage</a></li>
 </ul>
 </li>
-<li><a href="#events">18. EVENT Basics - Event Types</a>
+<li><a href="#events">18. EVENT Basics - General</a></li>
+<li><a href="#event-types">19. EVENT Basics - Event Types</a>
 <ul class="sectlevel2">
 <li><a href="#208"><span class="must-keyword"><strong>MUST</strong></span> define events compliant with overall API guidelines</a></li>
 <li><a href="#194"><span class="must-keyword"><strong>MUST</strong></span> treat events as part of the service interface</a></li>
@@ -1594,7 +1595,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#246"><span class="must-keyword"><strong>MUST</strong></span> use semantic versioning of event type schemas</a></li>
 </ul>
 </li>
-<li><a href="#event-categories">19. EVENT Basics - Event Categories</a>
+<li><a href="#event-categories">20. EVENT Basics - Event Categories</a>
 <ul class="sectlevel2">
 <li><a href="#198"><span class="must-keyword"><strong>MUST</strong></span> ensure that events conform to an event category</a></li>
 <li><a href="#247"><span class="must-keyword"><strong>MUST</strong></span> provide mandatory event metadata</a></li>
@@ -1606,7 +1607,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#204"><span class="should-keyword"><strong>SHOULD</strong></span> use the hash partition strategy for data change events</a></li>
 </ul>
 </li>
-<li><a href="#events-design">20. EVENT Design</a>
+<li><a href="#events-design">21. EVENT Design</a>
 <ul class="sectlevel2">
 <li><a href="#200"><span class="should-keyword"><strong>SHOULD</strong></span> avoid writing sensitive data to events</a></li>
 <li><a href="#214"><span class="must-keyword"><strong>MUST</strong></span> prepare event consumers for duplicate events</a></li>
@@ -1652,14 +1653,10 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <div class="paragraph">
 <p>IST’s software architecture centers around decoupled microservices
 that provide functionality via RESTful APIs with a JSON payload. Small
-engineering teams own, deploy and operate these microservices in their
-AWS (team) accounts. Our APIs most purely express what our systems do,
-and are therefore highly valuable business assets.
-Our strategy emphasizes developing lots of public APIs for our
-external business partners to use via third-party applications.</p>
+engineering teams own, deploy and operate these microservices. Our APIs most purely express what our systems do, and are therefore highly valuable business assets.</p>
 </div>
 <div class="paragraph">
-<p>With this in mind, we’ve adopted "API First" as one of our key
+<p>With this in mind, we&#8217;ve adopted "API First" as one of our key
 engineering principles. Microservices development begins with API
 definition outside the code and ideally involves ample peer-review
 feedback to achieve high-quality APIs. API First encompasses a set of
@@ -1706,11 +1703,8 @@ interpreted as described in <a href="https://www.ietf.org/rfc/rfc2119.txt">RFC
 <h3 id="IST-specific-information"><a class="link" href="#IST-specific-information">IST specific information</a></h3>
 <div class="paragraph">
 <p>The purpose of our "RESTful API guidelines" is to define standards to
-successfully establish "consistent API look and feel" quality. The
-<a href="https://educloud.ist.com/">API Guild (internal_link)</a>
-drafted and owns this document. Teams are responsible to fulfill
-these guidelines during API development and are encouraged to contribute
-to guideline evolution via pull requests.</p>
+successfully establish "consistent API look and feel" quality. The API SIG repurposed these guidelines from Zalando&#8217;s API guidelines and owns this document.
+Teams are responsible to fulfill these guidelines during API development and are encouraged to contribute to guideline evolution via pull requests.</p>
 </div>
 <div class="paragraph">
 <p>These guidelines will, to some extent, remain work in progress as our
@@ -1798,22 +1792,18 @@ Robustness Principle</a> (see also <a href="https://tools.ietf.org/html/rfc1122"
 </li>
 <li>
 <p>Book:
-<a href="https://www.amazon.de/Irresistible-APIs-Designing-that-developers/dp/1617292559">Irresistible
-APIs: Designing web APIs that developers will love</a></p>
+<a href="https://www.amazon.de/Irresistible-APIs-Designing-that-developers/dp/1617292559">Irresistible APIs: Designing web APIs that developers will love</a></p>
 </li>
 <li>
 <p>Book:
-<a href="http://www.amazon.de/REST-Practice-Hypermedia-Systems-Architecture/dp/0596805829">REST
-in Practice: Hypermedia and Systems Architecture</a></p>
+<a href="http://www.amazon.de/REST-Practice-Hypermedia-Systems-Architecture/dp/0596805829">REST in Practice: Hypermedia and Systems Architecture</a></p>
 </li>
 <li>
-<p>Book: <a href="https://leanpub.com/build-apis-you-wont-hate">Build APIs You
-Won&#8217;t Hate</a></p>
+<p>Book: <a href="https://leanpub.com/build-apis-you-wont-hate">Build APIs You Won&#8217;t Hate</a></p>
 </li>
 <li>
 <p>Fielding Dissertation:
-<a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm">Architectural
-Styles and the Design of Network-Based Software Architectures</a></p>
+<a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm">Architectural Styles and the Design of Network-Based Software Architectures</a></p>
 </li>
 </ul>
 </div>
@@ -7111,7 +7101,17 @@ of the client-id retrieved from the OAuth token.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="events"><a class="link" href="#events">18. EVENT Basics - Event Types</a></h2>
+<h2 id="events"><a class="link" href="#events">18. EVENT Basics - General</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The guidelines on Events are currently just placeholders from Zalando and
+while they are good to strive for in a general sense, the API SIG does not
+take it upon themselves to dictate how events must be defined nor how they should work.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="event-types"><a class="link" href="#event-types">19. EVENT Basics - Event Types</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>IST&#8217;s architecture <span class="should-keyword"><strong>SHOULD</strong></span> center around decoupled microservices and in
@@ -7664,7 +7664,7 @@ removing fields, or adding new required fields.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="event-categories"><a class="link" href="#event-categories">19. EVENT Basics - Event Categories</a></h2>
+<h2 id="event-categories"><a class="link" href="#event-categories">20. EVENT Basics - Event Categories</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>An <em>event category</em> describes a generic class of event types. The
@@ -8134,7 +8134,7 @@ reason".</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="events-design"><a class="link" href="#events-design">20. EVENT Design</a></h2>
+<h2 id="events-design"><a class="link" href="#events-design">21. EVENT Design</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="200"><a class="link" href="#200"><span class="should-keyword"><strong>SHOULD</strong></span> avoid writing sensitive data to events</a></h3>
@@ -9118,7 +9118,7 @@ window.cookieconsent.initialise({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-03-15 10:57:51 UTC
+Last updated 2023-06-21 13:08:18 UTC
 </div>
 </div>
 </body>
