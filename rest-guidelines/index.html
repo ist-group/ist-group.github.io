@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.20">
+<meta name="generator" content="Asciidoctor 2.0.23">
 <meta name="keywords" content="IST, Guidelines, RESTful, API, Events, Schema">
 <meta name="copyright" content="CC-BY-SA 4.0">
 <title>IST RESTful API Guidelines</title>
@@ -1993,11 +1993,6 @@ specification using a single <strong>self-contained YAML</strong> file to improv
 code management system - best together with the implementing sources.</p>
 </div>
 <div class="paragraph">
-<p>You <a href="#192">must</a> the component <a href="#219">external</a>
-API specification with the deployment of the implementing service, and, hence,
-make it discoverable for the group via our <a href="https://educloud.ist.com">API Portal</a>.</p>
-</div>
-<div class="paragraph">
 <p><strong>Hint:</strong> A good way to explore <strong>OpenAPI 3.0</strong> is to navigate through the
 <a href="https://openapi-map.apihandyman.io/">OpenAPI specification mind map</a> and use
 <a href="https://stoplight.io/studio">Stoplight Studio</a> to design and validate your first API.</p>
@@ -2793,13 +2788,19 @@ You <strong>must</strong> use these formats, whenever applicable:</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>iso-3166-alpha-2</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">two letter country code&#8201;&#8212;&#8201;see <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>. Hint: In the past we used <code>iso-3166</code> as format.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"GB"</code>  <strong>Hint:</strong> It is <code>"GB"</code>, not <code>"UK"</code>, even though <code>"UK"</code> has seen some use at ist.com <code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"GB"</code>  <strong>Hint:</strong> It is <code>"GB"</code>, not <code>"UK"</code>, even though <code>"UK"</code> has seen some use at ist.com</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>iso-4217</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">three letter currency code&#8201;&#8212;&#8201;see <a href="https://en.wikipedia.org/wiki/ISO_4217">ISO 4217</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>"EUR"</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gtin-13</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global Trade Item Number&#8201;&#8212;&#8201;see <a href="https://en.wikipedia.org/wiki/Global_Trade_Item_Number">GTIN</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"5710798389878"</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -9118,7 +9119,7 @@ window.cookieconsent.initialise({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-11-15 06:36:05 UTC
+Last updated 2024-11-20 06:35:18 UTC
 </div>
 </div>
 </body>
